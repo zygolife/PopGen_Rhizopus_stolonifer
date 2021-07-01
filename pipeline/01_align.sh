@@ -1,18 +1,19 @@
 #!/bin/bash
 #SBATCH -N 1 -n 16 --mem 32gb --out logs/bwa.%a.log --time 8:00:00
 module load bwa
-module load samtools/1.11
+module load samtools/1.12
 module load picard
 module load gatk/4
 module load java/13
+module load workspace/scratch
+MEM=32g
 
-MEM=128g
-
-TMPOUTDIR=tmp
+TEMP=tmp
 
 if [ -f config.txt ]; then
   source config.txt
 fi
+TEMP=$SCRATCH
 if [ -z $REFGENOME ]; then
   echo "NEED A REFGENOME - set in config.txt and make sure 00_index.sh is run"
   exit
@@ -57,13 +58,12 @@ do
       echo "STRAIN is $STRAIN BASE is $BASE BASEPATTERN is $BASEPATTERN"
 
       TMPBAMFILE=$TEMP/$BASE.unsrt.bam
-      SRTED=$TMPOUTDIR/$BASE.srt.bam
-      DDFILE=$TMPOUTDIR/$BASE.DD.bam
+      SRTED=$TEMP/$BASE.srt.bam
+      DDFILE=$TEMP/$BASE.DD.bam
 
       FINALFILE=$ALNFOLDER/$STRAIN.$HTCEXT
       READGROUP="@RG\tID:$BASE\tSM:$STRAIN\tLB:$BASE\tPL:illumina\tCN:$RGCENTER"
       echo "$TMPBAMFILE $READGROUP"
-#      echo "bwa mem -t $CPU -R $READGROUP $REFGENOME $FASTQFOLDER/$BASEPATTERN | samtools sort --threads $CPU -O bam -o $SRTED -T $TEMP -"
 
       if [ ! -s $DDFILE ]; then
         if [ ! -s $SRTED ]; then
