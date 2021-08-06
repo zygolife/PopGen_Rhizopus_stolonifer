@@ -11,7 +11,7 @@ module load yq
 SNPEFFGENOME=Rhizopus_stolonifer_NRRL_66455_JGI
 GFFGENOME=$SNPEFFGENOME.gff
 
-DOMAINS=$TOPFOLDER/genome/$(basename ${GFFGENOME} .gff)_InterproDomains.txt
+#DOMAINS=$TOPFOLDER/genome/$(basename ${GFFGENOME} .gff)_InterproDomains.txt
 MEM=64g
 TOPFOLDER=`pwd` # expecting to be run in top folder of the github checkout
 
@@ -46,13 +46,13 @@ mkdir -p $SNPEFFOUT
 ## NOTE YOU WILL NEED TO FIX THIS FOR YOUR CUSTOM GENOME
 if [ ! -e $SNPEFFOUT/$snpEffConfig ]; then
   rsync -a $SNPEFFDIR/snpEff.config $SNPEFFOUT/$snpEffConfig
-  echo "# AfumAf293.fungidb " >> $SNPEFFOUT/$snpEffConfig
+  echo "# Rstol.JGI " >> $SNPEFFOUT/$snpEffConfig
   # CHANGE Aspergillus fumigatus Af293 FungiDB to your genome name and source - though this is really not important - $SNPEFFGENOME.genome is really what is used
-  echo "$SNPEFFGENOME.genome : Aspergillus fumigatus Af293 FungiDB" >> $SNPEFFOUT/$snpEffConfig
+  echo "$SNPEFFGENOME.genome : Rhizopus stolonifer NRRL 66455 JGI " >> $SNPEFFOUT/$snpEffConfig
   chroms=$(grep '##sequence-region' $GFFGENOMEFILE | awk '{print $2}' | perl -p -e 's/\n/, /' | perl -p -e 's/,\s+$/\n/')
   echo -e "\t$SNPEFFGENOME.chromosomes: $chroms" >> $SNPEFFOUT/$snpEffConfig
   # THIS WOULD NEED SPEIFIC FIX BY USER - IN A.fumigatus the MT contig is called mito_A_fumigatus_Af293
-  echo -e "\t$SNPEFFGENOME.mito_A_fumigatus_Af293.codonTable : Mold_Mitochondrial" >> $SNPEFFOUT/$snpEffConfig
+  #echo -e "\t$SNPEFFGENOME.mito_A_fumigatus_Af293.codonTable : Mold_Mitochondrial" >> $SNPEFFOUT/$snpEffConfig
   mkdir -p $SNPEFFOUT/data/$SNPEFFGENOME
   gzip -c $GFFGENOMEFILE > $SNPEFFOUT/data/$SNPEFFGENOME/genes.gff.gz
   rsync -aL $REFGENOME $SNPEFFOUT/data/$SNPEFFGENOME/sequences.fa
