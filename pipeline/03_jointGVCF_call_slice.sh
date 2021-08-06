@@ -13,8 +13,6 @@ module load parallel
 module load yq
 module load workspace/scratch
 
-source config.txt
-
 #declare -x TEMPDIR=$TEMP/$USER/$$
 
 #cleanup() {
@@ -60,8 +58,8 @@ if [ ! $CPU ]; then
     CPU=2
 fi
 if [[ $(ls $GVCFFOLDER | grep -c -P "\.g.vcf$") -gt "0" ]]; then
-   parallel -j $CPU bgzip {} ::: $GVCFFOLDER/*.g.vcf
-  parallel -j $CPU tabix -f {} ::: $GVCFFOLDER/*.g.vcf.gz
+	parallel -j $CPU bgzip {} ::: $GVCFFOLDER/*.g.vcf
+  	parallel -j $CPU tabix -f {} ::: $GVCFFOLDER/*.g.vcf.gz
 fi
 
 if [[ -z $POPYAML || ! -s $POPYAML ]]; then
