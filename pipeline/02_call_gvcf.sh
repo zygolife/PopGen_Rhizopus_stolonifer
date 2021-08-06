@@ -51,7 +51,7 @@ do
   if [[ ! -f $GVCF || $ALNFILE -nt $GVCF ]]; then
       time gatk --java-options -Xmx${MEM} HaplotypeCaller \
    	  --emit-ref-confidence GVCF --sample-ploidy 1 \
-   	  --input $ALNFILE --reference $REFGENOME \
+   	  --input $ALNFILE --reference $REFGENOME --sample-name $STRAIN \
    	  --output $GVCF --native-pair-hmm-threads $CPU \
 	     -G StandardAnnotation -G AS_StandardAnnotation -G StandardHCAnnotation
  fi
